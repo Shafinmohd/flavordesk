@@ -100,7 +100,6 @@ class CustomImagePickerPlus {
       selectedFiles.selectedFile = convertedFile;
     }
 
-    //ignore: use_build_context_synchronously
     await Go(context).push(
       page: CreatePostPage(selectedFilesDetails: details),
     );

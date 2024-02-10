@@ -26,9 +26,12 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
+  // Controllers for text input fields
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final fullNameController = TextEditingController();
+
+  // ValueNotifiers for input validation and remembering password option
   final bool validateControllers = false;
   ValueNotifier<bool> validateEmail = ValueNotifier(false);
   ValueNotifier<bool> validatePassword = ValueNotifier(false);
@@ -36,6 +39,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
   @override
   Widget build(BuildContext context) {
+    // Building the SignUp page UI using RegisterWidgets
     return RegisterWidgets(
       fullNameController: fullNameController,
       customTextButton: customTextButton(),
@@ -48,40 +52,43 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
+  // Custom Text Button widget for handling sign up action
   Widget customTextButton() {
     return ValueListenableBuilder(
       valueListenable: rememberPassword,
       builder: (context, bool rememberPasswordValue, child) =>
           ValueListenableBuilder(
-            valueListenable: validateEmail,
-            builder: (context, bool validateEmailValue, child) =>
-                ValueListenableBuilder(
-                  valueListenable: validatePassword,
-                  builder: (context, bool validatePasswordValue, child) {
-                    bool validate = validatePasswordValue &&
-                        validateEmailValue &&
-                        rememberPasswordValue &&
-                        fullNameController.text.isNotEmpty;
-                    return CustomElevatedButton(
-                      isItDone: true,
-                      isThatSignIn: true,
-                      nameOfButton: StringsManager.next.tr,
-                      blueColor: validate ? true : false,
-                      onPressed: () async {
-                        if (validate) {
-                          Get.to(
-                              UserNamePage(
-                                emailController: emailController,
-                                passwordController: passwordController,
-                                fullNameController: fullNameController,
-                              ),
-                              duration: const Duration(seconds: 0));
-                        }
-                      },
-                    );
-                  },
-                ),
-          ),
+        valueListenable: validateEmail,
+        builder: (context, bool validateEmailValue, child) =>
+            ValueListenableBuilder(
+          valueListenable: validatePassword,
+          builder: (context, bool validatePasswordValue, child) {
+            bool validate = validatePasswordValue &&
+                validateEmailValue &&
+                rememberPasswordValue &&
+                fullNameController.text.isNotEmpty;
+            return CustomElevatedButton(
+              isItDone: true,
+              isThatSignIn: true,
+              nameOfButton: StringsManager.next.tr,
+              blueColor: validate ? true : false,
+              onPressed: () async {
+                if (validate) {
+                  // Navigate to UserNamePage upon successful validation
+                  Get.to(
+                    UserNamePage(
+                      emailController: emailController,
+                      passwordController: passwordController,
+                      fullNameController: fullNameController,
+                    ),
+                    duration: const Duration(seconds: 0),
+                  );
+                }
+              },
+            );
+          },
+        ),
+      ),
     );
   }
 }
@@ -90,6 +97,7 @@ class UserNamePage extends StatefulWidget {
   final TextEditingController emailController;
   final TextEditingController passwordController;
   final TextEditingController fullNameController;
+
   const UserNamePage({
     Key? key,
     required this.emailController,
@@ -102,32 +110,33 @@ class UserNamePage extends StatefulWidget {
 }
 
 class _UserNamePageState extends State<UserNamePage> {
+  // Controller for username input field
   final userNameController = TextEditingController();
 
+  // Boolean flags for various states
   bool isToastShowed = false;
-
   bool validateEdits = false;
-
   bool isFieldEmpty = true;
-
   bool isHeMovedToHome = false;
 
   @override
   Widget build(BuildContext context) {
+    // Building the UserNamePage UI
     return Scaffold(
       body: SafeArea(
         child: Center(
           child: isThatMobile
               ? SizedBox(
-            height: MediaQuery.of(context).size.height,
-            child: buildColumn(context),
-          )
+                  height: MediaQuery.of(context).size.height,
+                  child: buildColumn(context),
+                )
               : buildForWeb(context),
         ),
       ),
     );
   }
 
+  // Building column layout for mobile devices
   Widget buildColumn(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -137,7 +146,7 @@ class _UserNamePageState extends State<UserNamePage> {
         Text(
           StringsManager.createUserName.tr,
           style:
-          getMediumStyle(color: Theme.of(context).focusColor, fontSize: 15),
+              getMediumStyle(color: Theme.of(context).focusColor, fontSize: 15),
         ),
         const SizedBox(height: 10),
         Center(
@@ -157,6 +166,7 @@ class _UserNamePageState extends State<UserNamePage> {
     );
   }
 
+  // Building layout for web devices
   SizedBox buildForWeb(BuildContext context) {
     return SizedBox(
       width: 352,
@@ -177,13 +187,14 @@ class _UserNamePageState extends State<UserNamePage> {
     );
   }
 
+  // Widget for username text field
   Widget userNameTextField(BuildContext context) {
     return BlocBuilder<SearchAboutUserBloc, SearchAboutUserState>(
       bloc: BlocProvider.of<SearchAboutUserBloc>(context)
         ..add(FindSpecificUser(userNameController.text,
             searchForSingleLetter: true)),
       buildWhen: (previous, current) =>
-      previous != current && current is SearchAboutUserBlocLoaded,
+          previous != current && current is SearchAboutUserBlocLoaded,
       builder: (context, state) {
         List<UserPersonalInfo> usersWithSameUserName = [];
 
@@ -191,19 +202,20 @@ class _UserNamePageState extends State<UserNamePage> {
           usersWithSameUserName = state.users;
         }
         WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {
-          validateEdits = usersWithSameUserName.isEmpty;
-          if (userNameController.text.isEmpty) {
-            validateEdits = false;
-            isFieldEmpty = true;
-          } else {
-            isFieldEmpty = false;
-          }
-        }));
+              validateEdits = usersWithSameUserName.isEmpty;
+              if (userNameController.text.isEmpty) {
+                validateEdits = false;
+                isFieldEmpty = true;
+              } else {
+                isFieldEmpty = false;
+              }
+            }));
         return customTextField(context);
       },
     );
   }
 
+  // Custom Text Field widget for username
   Padding customTextField(BuildContext context) {
     return Padding(
       padding: const EdgeInsetsDirectional.only(start: 20, end: 20),
@@ -214,7 +226,7 @@ class _UserNamePageState extends State<UserNamePage> {
           controller: userNameController,
           cursorColor: ColorManager.teal,
           style:
-          getNormalStyle(color: Theme.of(context).focusColor, fontSize: 15),
+              getNormalStyle(color: Theme.of(context).focusColor, fontSize: 15),
           decoration: InputDecoration(
             hintText: StringsManager.username.tr,
             hintStyle: isThatMobile
@@ -244,10 +256,12 @@ class _UserNamePageState extends State<UserNamePage> {
     );
   }
 
+  // Icon widget for indicating a valid username
   Icon rightIcon() {
     return const Icon(Icons.check_rounded, color: ColorManager.green, size: 27);
   }
 
+  // Icon widget for indicating an invalid username
   Widget wrongIcon() {
     return const Icon(
       Icons.close_rounded,
@@ -256,6 +270,7 @@ class _UserNamePageState extends State<UserNamePage> {
     );
   }
 
+  // Method for defining outline input border
   OutlineInputBorder outlineInputBorder() {
     return OutlineInputBorder(
       borderRadius: BorderRadius.circular(isThatMobile ? 5.0 : 1.0),
@@ -264,10 +279,11 @@ class _UserNamePageState extends State<UserNamePage> {
     );
   }
 
+  // Widget for custom text button handling sign-up action
   Widget customTextButton() {
     return Builder(builder: (context) {
       FireStoreAddNewUserCubit userCubit =
-      FireStoreAddNewUserCubit.get(context);
+          FireStoreAddNewUserCubit.get(context);
       return BlocConsumer<FirebaseAuthCubit, FirebaseAuthCubitState>(
         listenWhen: (previous, current) => previous != current,
         listener: (context, state) {
@@ -302,6 +318,7 @@ class _UserNamePageState extends State<UserNamePage> {
     });
   }
 
+  // Method for navigating to the main screen after successful signup
   moveToMain(CubitAuthConfirmed authState) async {
     myPersonalId = authState.user.uid;
 
@@ -318,6 +335,7 @@ class _UserNamePageState extends State<UserNamePage> {
     }
   }
 
+  // Method for adding a new user after signup
   addNewUser(CubitAuthConfirmed authState, FireStoreAddNewUserCubit userCubit) {
     String fullName = widget.fullNameController.text;
     List<dynamic> charactersOfName = [];
@@ -335,16 +353,12 @@ class _UserNamePageState extends State<UserNamePage> {
       bio: "",
       profileImageUrl: "",
       userId: authState.user.uid,
-
-      /// I have some issues when set those as initial value in UserPersonalInfo
-      followerPeople: const [],
-      followedPeople: const [],
-      posts: const [],
-      chatsOfGroups: const [],
-      stories: const [],
-      lastThreePostUrls: const [],
-
-      /// -------------------------------->
+      followerPeople: const [], // Initial values
+      followedPeople: const [], // Initial values
+      posts: const [], // Initial values
+      chatsOfGroups: const [], // Initial values
+      stories: const [], // Initial values
+      lastThreePostUrls: const [], // Initial values
     );
     userCubit.addNewUser(newUserInfo);
   }

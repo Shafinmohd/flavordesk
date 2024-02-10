@@ -31,6 +31,7 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
     return ValueListenableBuilder(
       valueListenable: playMainReelVideos,
       builder: (BuildContext context, bool value, __) {
+        // 1. CupertinoTabScaffold with a bottom navigation bar
         return CupertinoTabScaffold(
             tabBar: CupertinoTabBar(
                 backgroundColor:
@@ -38,6 +39,7 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
                 height: 45,
                 border: Border.all(color: ColorManager.transparent),
                 items: [
+                  // 2. Bottom navigation items
                   navigationBarItem(IconsAssets.home, value),
                   navigationBarItem(IconsAssets.search, value),
                   navigationBarItem(IconsAssets.video, value, smallIcon: true),
@@ -116,6 +118,7 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
   BottomNavigationBarItem navigationBarItem(String icon, bool value,
       {bool smallIcon = false}) {
     return BottomNavigationBarItem(
+      // 3. Icon for bottom navigation bar item
       icon: SvgPicture.asset(
         icon,
         height: smallIcon ? 23 : 25,

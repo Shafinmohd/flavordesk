@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:firebase_auth/firebase_auth.dart';
 
 class FirebaseAuthentication {
@@ -21,7 +23,7 @@ class FirebaseAuthentication {
   }
 
   static Future<bool> isThisEmailToken({required String email}) async {
-    List<String> data=await _firebaseAuth.fetchSignInMethodsForEmail(email);
+    List<String> data = await _firebaseAuth.fetchSignInMethodsForEmail(email);
 
     return data.isNotEmpty;
   }

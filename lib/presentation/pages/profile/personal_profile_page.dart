@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
@@ -70,48 +72,48 @@ class _ProfilePageState extends State<PersonalProfilePage> {
         valueListenable: rebuildUserInfo,
         builder: (context, bool rebuildValue, child) =>
             BlocBuilder<UserInfoCubit, UserInfoState>(
-              bloc: widget.userName.isNotEmpty
-                  ? (BlocProvider.of<UserInfoCubit>(context)
+          bloc: widget.userName.isNotEmpty
+              ? (BlocProvider.of<UserInfoCubit>(context)
                 ..getUserFromUserName(widget.userName))
-                  : (BlocProvider.of<UserInfoCubit>(context)
+              : (BlocProvider.of<UserInfoCubit>(context)
                 ..getUserInfo(widget.personalId, getDeviceToken: true)),
-              buildWhen: (previous, current) {
-                if (previous != current && current is CubitMyPersonalInfoLoaded) {
-                  return true;
-                }
-                if (previous != current && current is CubitGetUserInfoFailed) {
-                  return true;
-                }
-                if (rebuildValue) {
-                  rebuildUserInfo.value = false;
-                  return true;
-                }
-                return false;
-              },
-              builder: (context, state) {
-                if (state is CubitMyPersonalInfoLoaded) {
-                  return Scaffold(
-                    appBar: isThatMobile
-                        ? appBar(state.userPersonalInfo.userName)
-                        : null,
-                    body: ProfilePage(
-                      isThatMyPersonalId: true,
-                      userId: state.userPersonalInfo.userId,
-                      userInfo: ValueNotifier(state.userPersonalInfo),
-                      widgetsAboveTapBars: isThatMobile
-                          ? widgetsAboveTapBarsForMobile(state.userPersonalInfo)
-                          : widgetsAboveTapBarsForWeb(state.userPersonalInfo),
-                    ),
-                  );
-                } else if (state is CubitGetUserInfoFailed) {
-                  ToastShow.toastStateError(state);
-                  return Text(StringsManager.noPosts.tr,
-                      style: Theme.of(context).textTheme.bodyLarge);
-                } else {
-                  return const ThineCircularProgress();
-                }
-              },
-            ),
+          buildWhen: (previous, current) {
+            if (previous != current && current is CubitMyPersonalInfoLoaded) {
+              return true;
+            }
+            if (previous != current && current is CubitGetUserInfoFailed) {
+              return true;
+            }
+            if (rebuildValue) {
+              rebuildUserInfo.value = false;
+              return true;
+            }
+            return false;
+          },
+          builder: (context, state) {
+            if (state is CubitMyPersonalInfoLoaded) {
+              return Scaffold(
+                appBar: isThatMobile
+                    ? appBar(state.userPersonalInfo.userName)
+                    : null,
+                body: ProfilePage(
+                  isThatMyPersonalId: true,
+                  userId: state.userPersonalInfo.userId,
+                  userInfo: ValueNotifier(state.userPersonalInfo),
+                  widgetsAboveTapBars: isThatMobile
+                      ? widgetsAboveTapBarsForMobile(state.userPersonalInfo)
+                      : widgetsAboveTapBarsForWeb(state.userPersonalInfo),
+                ),
+              );
+            } else if (state is CubitGetUserInfoFailed) {
+              ToastShow.toastStateError(state);
+              return Text(StringsManager.noPosts.tr,
+                  style: Theme.of(context).textTheme.bodyLarge);
+            } else {
+              return const ThineCircularProgress();
+            }
+          },
+        ),
       ),
     );
   }
@@ -161,7 +163,7 @@ class _ProfilePageState extends State<PersonalProfilePage> {
         valueListenable: darkTheme,
         builder: (context, bool themeValue, child) {
           Color themeOfApp =
-          themeValue ? ColorManager.white : ColorManager.black;
+              themeValue ? ColorManager.white : ColorManager.black;
           return Text(StringsManager.create.tr,
               style: getBoldStyle(color: themeOfApp, fontSize: 17));
         });
@@ -236,29 +238,29 @@ class _ProfilePageState extends State<PersonalProfilePage> {
   Widget logOut() {
     return BlocBuilder<FirebaseAuthCubit, FirebaseAuthCubitState>(
         builder: (context, state) {
-          FirebaseAuthCubit authCubit = FirebaseAuthCubit.get(context);
-          if (state is CubitAuthSignOut) {
-            WidgetsBinding.instance.addPostFrameCallback((_) async {
-              sharePrefs.clear();
-              Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
-                CupertinoPageRoute(
-                    builder: (_) => const LoginPage(), maintainState: false),
-                    (route) => false,
-              );
-            });
-          } else if (state is CubitAuthConfirming) {
-            ToastShow.toast(StringsManager.loading.tr);
-          } else if (state is CubitAuthFailed) {
-            ToastShow.toastStateError(state);
-          }
-          return GestureDetector(
-            child: createSizedBox(StringsManager.logOut.tr,
-                icon: Icons.logout_rounded),
-            onTap: () async {
-              await authCubit.signOut(userId: widget.personalId);
-            },
+      FirebaseAuthCubit authCubit = FirebaseAuthCubit.get(context);
+      if (state is CubitAuthSignOut) {
+        WidgetsBinding.instance.addPostFrameCallback((_) async {
+          sharePrefs.clear();
+          Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
+            CupertinoPageRoute(
+                builder: (_) => const LoginPage(), maintainState: false),
+            (route) => false,
           );
         });
+      } else if (state is CubitAuthConfirming) {
+        ToastShow.toast(StringsManager.loading.tr);
+      } else if (state is CubitAuthFailed) {
+        ToastShow.toastStateError(state);
+      }
+      return GestureDetector(
+        child: createSizedBox(StringsManager.logOut.tr,
+            icon: Icons.logout_rounded),
+        onTap: () async {
+          await authCubit.signOut(userId: widget.personalId);
+        },
+      );
+    });
   }
 
   List<Widget> widgetsAboveTapBarsForMobile(UserPersonalInfo userInfo) {
@@ -274,9 +276,9 @@ class _ProfilePageState extends State<PersonalProfilePage> {
     return Expanded(
       child: Builder(builder: (buildContext) {
         UserPersonalInfo myPersonalInfo =
-        UserInfoCubit.getMyPersonalInfo(context);
+            UserInfoCubit.getMyPersonalInfo(context);
         UserPersonalInfo? info =
-        UsersInfoReelTimeBloc.getMyInfoInReelTime(context);
+            UsersInfoReelTimeBloc.getMyInfoInReelTime(context);
         if (isMyInfoInReelTimeReady && info != null) myPersonalInfo = info;
         return InkWell(
           onTap: () async {
@@ -357,7 +359,6 @@ class _ProfilePageState extends State<PersonalProfilePage> {
             nameOfPath: IconsAssets.addInstagramStoryIcon));
   }
 
-  /// TODO: handle the video selection (aspect ratio especially)
   Widget createVideo() {
     return InkWell(
         onTap: () async {
@@ -378,7 +379,7 @@ class _ProfilePageState extends State<PersonalProfilePage> {
       context,
       isThatStory: true,
     );
-    if (!mounted ) return;
+    if (!mounted) return;
     if (details == null) return;
     await Go(context).push(page: CreateStoryPage(storiesDetails: details));
     rebuildUserInfo.value = true;
@@ -405,17 +406,17 @@ class _ProfilePageState extends State<PersonalProfilePage> {
         valueListenable: darkTheme,
         builder: (context, bool themeValue, child) {
           Color themeOfApp =
-          themeValue ? ColorManager.white : ColorManager.black;
+              themeValue ? ColorManager.white : ColorManager.black;
 
           return Row(children: [
             nameOfPath.isNotEmpty
                 ? SvgPicture.asset(
-              nameOfPath,
-              colorFilter: ColorFilter.mode(
-                  Theme.of(context).dialogBackgroundColor,
-                  BlendMode.srcIn),
-              height: 25,
-            )
+                    nameOfPath,
+                    colorFilter: ColorFilter.mode(
+                        Theme.of(context).dialogBackgroundColor,
+                        BlendMode.srcIn),
+                    height: 25,
+                  )
                 : Icon(icon, color: themeOfApp),
             const SizedBox(width: 15),
             Text(

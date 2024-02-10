@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram/presentation/widgets/global/others/play_this_video.dart';
-// ignore: depend_on_referenced_packages
 import 'package:octo_image/octo_image.dart';
 
 class NetworkDisplay extends StatefulWidget {
@@ -75,9 +74,8 @@ class _NetworkDisplayState extends State<NetworkDisplay> {
       fit: BoxFit.cover,
       width: widget.width ?? double.infinity,
       height: widget.height ?? height,
-      placeholderBuilder: widget.blurHash.isNotEmpty
-          ? OctoPlaceholder.blurHash(widget.blurHash, fit: BoxFit.cover)
-          : (context) => Center(child: loadingWidget()),
+      placeholderBuilder: (context) =>
+          const Center(child: CircularProgressIndicator()),
     );
   }
 

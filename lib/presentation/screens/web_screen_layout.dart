@@ -25,6 +25,7 @@ import 'package:instagram/presentation/widgets/global/others/notification_card_i
 import 'package:instagram/presentation/widgets/global/popup_widgets/web/new_post.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+// Variable to keep track of the current page index
 int pageOfController = 0;
 
 class WebScreenLayout extends StatefulWidget {
@@ -82,6 +83,7 @@ class _WebScreenLayoutState extends State<WebScreenLayout> {
       body: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          // 1. AppBar
           appBar(context),
           Expanded(
             child: widget.body ??
@@ -121,6 +123,7 @@ class _WebScreenLayoutState extends State<WebScreenLayout> {
               const Expanded(child: SizedBox(width: 1)),
               Column(
                 children: [
+                  // 2. Home Button
                   Center(
                     child: IconButton(
                       icon: Icon(
@@ -153,6 +156,7 @@ class _WebScreenLayoutState extends State<WebScreenLayout> {
                 onPressed: () => navigationTapped(3),
               ),
               const SizedBox(width: 5),
+              // 3. Notification Icon with Popup Menu
               PopupMenuButton<int>(
                 tooltip: "Show notifications",
                 constraints:
@@ -189,6 +193,7 @@ class _WebScreenLayoutState extends State<WebScreenLayout> {
                 },
               ),
               const SizedBox(width: 5),
+              // 4. Profile Popup Menu Button
               buildPopupMenuButton(context),
             ],
           ),
@@ -272,10 +277,15 @@ class _WebScreenLayoutState extends State<WebScreenLayout> {
 
   List<Widget> homeScreenItems() {
     return [
+      // 5. Home Page
       const _HomePage(),
+      // 6. Messages Page
       MessagesForWeb(selectedTextingUser: widget.userInfoForMessagePage),
+      // 7. Shop Page
       const ShopPage(),
+      // 8. All Users Time Line Page
       AllUsersTimeLinePage(),
+      // 9. Personal Profile Page
       const _PersonalProfilePage(),
     ];
   }

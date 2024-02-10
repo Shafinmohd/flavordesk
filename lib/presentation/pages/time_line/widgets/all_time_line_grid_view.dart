@@ -9,7 +9,6 @@ import 'package:instagram/presentation/customPackages/in_view_notifier/in_view_n
 import 'package:instagram/presentation/customPackages/in_view_notifier/in_view_notifier_widget.dart';
 import 'package:instagram/presentation/widgets/global/custom_widgets/custom_grid_view_display.dart';
 
-// ignore: must_be_immutable
 class AllTimeLineGridView extends StatefulWidget {
   List<Post> postsImagesInfo;
   List<Post> postsVideosInfo;
